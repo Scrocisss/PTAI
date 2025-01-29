@@ -1,0 +1,23 @@
+{{
+func mapLevel(level)
+  case level
+    when 'level-high'
+      ret 'error'
+    when 'level-medium'
+      ret 'warning'
+    else
+      ret 'note'
+  end
+end
+
+func removeLineNumber(uri)
+  # some filenames also include line number at the end like this: 'file.txt : 123', so removing it
+  ret regex.replace(uri, "\\s?:\\s?\\d+", "")
+end
+
+-}}
+
+LEVEL;TYPE;FILE
+{{- for vuln in Items }}
+{{ mapLevel(vuln.Level.Value) }};{{ vuln.Type.DisplayName }};{{ vuln.SourceFile | removeLineNumber | string.escape }}
+{{- end }}
